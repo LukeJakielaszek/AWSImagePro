@@ -70,7 +70,7 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"
-MEDIA_ROOT = '/home/ec2-user/media/'
+MEDIA_ROOT = '/home/ec2-user/AWSImagePro/media/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -94,7 +94,7 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    "/home/ec2-user/myapp/templates/static",
+    "/home/ec2-user/AWSImagePro/myapp/templates/static",
 )
 
 # List of finder classes that know how to find static files in
@@ -135,7 +135,7 @@ TEMPLATE_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
     #os.path.join(os.path.realpath(__file__), '../templates'),
-    "/home/ec2-user/myapp/templates",
+    "/home/ec2-user/AWSImagePro/myapp/templates",
 )
 
 INSTALLED_APPS = (

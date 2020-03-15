@@ -5,12 +5,12 @@ from PIL import Image, ImageOps,ImageFilter
 
 
 def applyfilter(filename, preset):
-	inputfile = '/home/ec2-user/media/' + filename
+	inputfile = '/home/ec2-user/AWSImagePro/media/' + filename
 
 	f=filename.split('.')
 	outputfilename = f[0] + '-out.jpg'
 
-	outputfile = '/home/ec2-user/myapp/templates/static/output/' + outputfilename
+	outputfile = '/home/ec2-user/AWSImagePro/myapp/templates/static/output/' + outputfilename
 
 	im = Image.open(inputfile)
 	if preset=='gray':
