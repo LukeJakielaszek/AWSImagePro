@@ -1,0 +1,9 @@
+**/*.bash_profile
+**/*.bashrc
+**/*.bash_history
+**/*.bash_logout
+**/*.emacs.d
+**/*.#*
+**/*~
+**/*.ssh
+**/*.cache*
