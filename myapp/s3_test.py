@@ -42,6 +42,29 @@ def create_bucket(bucket_name, region=None):
 def percent_cb(complete, total):
     print ('.')
 
+def test_perms():
+    print('connecting')
+    s3 = boto.connect_s3(aws_access_key_id='ASIA5NMW7G67KJQSXE72',
+                         aws_secret_access_key='BPtwqyIEbnO++9XLViKgVrqJdVyT0XDp1V7BIe9x')
+    print('lookup')
+    bucket = s3.get_bucket('imagepro-project1', validate=False)
+    print('new key')
+
+    key = bucket.new_key('testkey')
+    print('set contents')
+
+    key.set_contents_from_string('This is a test')
+    print('check key')
+
+    key.exists()
+
+    print('delete key')
+
+    key.delete()
+
+    print('done')
+
+
 def upload_to_s3_bucket_file(bucketname, filename):
     print('uploading [' + filename + '] to [' + bucketname + ']')
     conn = boto.connect_s3(aws_access_key_id='ASIA5NMW7G67DP5QTUFV',
