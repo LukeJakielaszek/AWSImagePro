@@ -24,8 +24,9 @@ SOFTWARE.
 
 import os
 import boto.s3
-conn = boto.connect_s3(aws_access_key_id='',
-     aws_secret_access_key='6zJ00CIOpY3K7PT3Y4hlhNB6Fwn2xo/NYGFIe/1O')
+import boto3
+
+conn = boto3.client('s3')
 
 def percent_cb(complete, total):
     print ('.')
@@ -63,4 +64,3 @@ def getuserfiles(bucketname,username):
 def delete_from_s3(bucketname, username,filename):
 	mybucket = conn.get_bucket(bucketname)
 	mybucket.delete_key(username+'/media/'+filename)
-

@@ -15,7 +15,6 @@ def applyfilter(filename, preset):
 	im = Image.open(inputfile)
 	if preset=='gray':
 		im = ImageOps.grayscale(im)
-
 	if preset=='edge':
 		im = ImageOps.grayscale(im)
 		im = im.filter(ImageFilter.FIND_EDGES)
