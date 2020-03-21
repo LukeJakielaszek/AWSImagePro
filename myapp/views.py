@@ -48,6 +48,8 @@ def applyfilter(filename, preset):
         client.upload_file(inputfile, bucket_name, filename)
         client.upload_file(outputfile, bucket_name, outputfilename)
 
+        print(client.get_user_files(bucket_name))
+
 	return outputfilename
 
 def handle_uploaded_file(f,preset):

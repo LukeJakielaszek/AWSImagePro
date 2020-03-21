@@ -42,33 +42,30 @@ class s3_client():
         # Upload the file
         try:
             response = self.s3_client.upload_file(file_name, bucket, 
-                                                  self.username + '/media/' + object_name)
+                                                  self.username + '/' + object_name)
         except ClientError as e:
             logging.error(e)
             return False
         return True
     
-    def getuserfiles(self, bucketname):
-        # Upload the file
-        mybucket = self.s3_client.get_bucket(bucketname)
-        keys = mybucket.list(self.username)
-        totalsize=0.0
-        userfiles = {}
-        for key in keys:
-            value=[]
-            #value.append(key.name)
-            filename = key.name
-            filename=filename.replace(self.username+'/media/','')
-            value.append(key.last_modified)
-            keysize = float(key.size)/1000.0
-            value.append(str(keysize))
-            userfiles[filename]=value
-            totalsize = totalsize + float(key.size)
-        totalsize = totalsize/1000000.0
-        return userfiles,totalsize
+    def get_user_files(self, bucket_name):
+        result = self.s3_client.list_objects_v2(Bucket=bucket_name)
+
+        delim = self.username + '/'
+        keys = []
+        total_size = 0.0
+        for obj in result.get('Contents'):
+            cur_file = obj.get('Key')
+
+            if(cur_file.startswith(delim)):
+                keys.append(cur_file)
+                total_size += float(obj.get('Size'))
+
+        totalsize = total_size/1000000.0
+        return(keys, total_size)
 
     def delete_from_s3(self, bucketname, filename):
         # Upload the file
         mybucket = self.s3_client.get_bucket(bucketname)
-        mybucket.delete_key(self.username+'/media/'+filename)
+        mybucket.delete_key(self.username + '/' + filename)
 
