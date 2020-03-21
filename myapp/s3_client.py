@@ -1,5 +1,6 @@
 import logging
 import boto3
+from botocore.exceptions import ClientError
 
 class s3_client():
     username = None
@@ -40,8 +41,8 @@ class s3_client():
 
         # Upload the file
         try:
-            response = self.s3_client.upload_file(self.username + '/media/' + file_name,
-                                                  bucket, object_name)
+            response = self.s3_client.upload_file(file_name, bucket, 
+                                                  self.username + '/media/' + object_name)
         except ClientError as e:
             logging.error(e)
             return False
