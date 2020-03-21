@@ -42,41 +42,34 @@ def create_bucket(bucket_name, region=None):
 def percent_cb(complete, total):
     print ('.')
 
-def test_perms():
-    print('connecting')
-    s3 = boto.connect_s3(aws_access_key_id='ASIA5NMW7G67KJQSXE72',
-                         aws_secret_access_key='BPtwqyIEbnO++9XLViKgVrqJdVyT0XDp1V7BIe9x')
-    print('lookup')
-    bucket = s3.get_bucket('imagepro-project1', validate=False)
-    print('new key')
-
-    key = bucket.new_key('testkey')
-    print('set contents')
-
-    key.set_contents_from_string('This is a test')
-    print('check key')
-
-    key.exists()
-
-    print('delete key')
-
-    key.delete()
-
-    print('done')
-
-
 def upload_to_s3_bucket_file(bucketname, filename):
     print('uploading [' + filename + '] to [' + bucketname + ']')
-    conn = boto.connect_s3(aws_access_key_id='ASIA5NMW7G67DP5QTUFV',
-                           aws_secret_access_key='/bWUZ1tK/Pj67Im9wtW8BGJxCbCC9FH9Bdhw6j5G')
+    # Upload the file
+    s3_client = boto3.client('s3')
+    try:
+        response = s3_client.upload_file(filename, bucketname, filename)
+    except ClientError as e:
+        logging.error(e)
+        return False
+    return True
 
-    print('got connection')
-    mybucket = conn.get_bucket(bucketname)
-    
-    print("got bucket")
-    key = mybucket.new_key(filename)
-    
-    print('created key')
-    key.set_contents_from_filename(filename, cb=percent_cb, num_cb=10)
-    
-    print('updated bucket')
+def upload_file(file_name, bucket, object_name=None):
+    """Upload a file to an S3 bucket
+    :param file_name: File to upload
+    :param bucket: Bucket to upload to
+    :param object_name: S3 object name. If not specified then file_name is used
+    :return: True if file was uploaded, else False
+    """
+
+    # If S3 object_name was not specified, use file_name
+    if object_name is None:
+        object_name = file_name
+
+    # Upload the file
+    s3_client = boto3.client('s3')
+    try:
+        response = s3_client.upload_file(file_name, bucket, object_name)
+    except ClientError as e:
+        logging.error(e)
+        return False
+    return True

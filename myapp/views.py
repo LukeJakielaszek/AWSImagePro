@@ -2,7 +2,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from myapp.forms import UploadFileForm
 from PIL import Image, ImageOps,ImageFilter
-from s3_test import list_buckets, create_bucket, upload_to_s3_bucket_file, test_perms
+from s3transfer import list_buckets, create_bucket, upload_to_s3_bucket_file, upload_file
 
 def applyfilter(filename, preset):
 	inputfile = '/home/ec2-user/AWSImagePro/media/' + filename
@@ -38,12 +38,13 @@ def applyfilter(filename, preset):
 		im.putpalette(sepia)
 		im = im.convert("RGB")
 
-        #create_bucket('testing-bucket')
         list_buckets()
-        #upload_to_s3_bucket_file('imagepro-project1', inputfile)
-        test_perms()
-
 	im.save(outputfile)
+
+        bucket_name = 'project-1-imagepro'
+        upload_file(inputfile, bucket_name, filename)
+        upload_file(outputfile, bucket_name, outputfilename)
+
 	return outputfilename
 
 def handle_uploaded_file(f,preset):

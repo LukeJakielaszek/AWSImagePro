@@ -24,8 +24,8 @@ SOFTWARE.
 
 import os
 import boto.s3
-conn = boto.connect_s3(aws_access_key_id='ASIA5NMW7G67DP5QTUFV',
-     aws_secret_access_key='/bWUZ1tK/Pj67Im9wtW8BGJxCbCC9FH9Bdhw6j5G')
+conn = boto.connect_s3(aws_access_key_id='',
+     aws_secret_access_key='6zJ00CIOpY3K7PT3Y4hlhNB6Fwn2xo/NYGFIe/1O')
 
 def percent_cb(complete, total):
     print ('.')
