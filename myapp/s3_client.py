@@ -42,7 +42,8 @@ class s3_client():
         # Upload the file
         try:
             response = self.s3_client.upload_file(file_name, bucket, 
-                                                  self.username + '/' + object_name)
+                                                  self.username + '/'
+                                                  + object_name)
         except ClientError as e:
             logging.error(e)
             return False
@@ -69,3 +70,6 @@ class s3_client():
         mybucket = self.s3_client.get_bucket(bucketname)
         mybucket.delete_key(self.username + '/' + filename)
 
+    def download_from_s3(self, bucketname, filename, object_name):
+        self.s3_client.download_file(bucketname, self.username + 
+                                     '/' + object_name, filename)

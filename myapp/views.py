@@ -9,7 +9,7 @@ def applyfilter(filename, preset):
 	inputfile = '/home/ec2-user/AWSImagePro/media/' + filename
 
 	f=filename.split('.')
-	outputfilename = f[0] + '-out.jpg'
+	outputfilename = f[0] + '_' + preset + '_out.jpg'
 
 	outputfile = '/home/ec2-user/AWSImagePro/myapp/templates/static/output/' + outputfilename
 
@@ -49,6 +49,8 @@ def applyfilter(filename, preset):
         client.upload_file(outputfile, bucket_name, outputfilename)
 
         print(client.get_user_files(bucket_name))
+
+        client.download_from_s3(bucket_name, './download/'+outputfilename, outputfilename)
 
 	return outputfilename
 
