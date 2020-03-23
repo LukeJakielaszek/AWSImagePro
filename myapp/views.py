@@ -2,7 +2,6 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from myapp.forms import UploadFileForm
 from PIL import Image, ImageOps,ImageFilter
-#from s3transfer import list_buckets, create_bucket, upload_to_s3_bucket_file, upload_file
 from s3_client import s3_client
 
 def applyfilter(filename, preset):
@@ -68,13 +67,16 @@ def home(request):
 		form = UploadFileForm(request.POST, request.FILES)
 		if form.is_valid():
                         preset=request.POST['preset']
-			outputfilename = handle_uploaded_file(request.FILES['myfilefield'],preset)
-			return render_to_response('process.html',{'outputfilename': outputfilename}, context_instance=RequestContext(request))
+			outputfilename = handle_uploaded_file(request.FILES['myfilefield'],
+                                                              preset)
+			return render_to_response('process.html',
+                                                  {'outputfilename': outputfilename}, 
+                                                  context_instance=RequestContext(request))
 	else:
 		form = UploadFileForm() 
-	return render_to_response('index.html',{'form': form}, context_instance=RequestContext(request))
+
+        return render_to_response('index.html',{'form': form}, 
+                                  context_instance=RequestContext(request))
 
 def process(request):
 	return render_to_response('process.html', {})
-
-
