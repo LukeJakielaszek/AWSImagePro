@@ -26,7 +26,6 @@ SOFTWARE.
 from django.conf.urls import *
 
 urlpatterns = patterns('',
-    url(r'^$', 'myapp.views.home'),	
-    url(r'^process/$', 'myapp.views.process'),
+    url(r'^$', 'myapp.views.home', name='home'),
+    url(r'^process/$', 'myapp.views.process', name='process'),
 )
-

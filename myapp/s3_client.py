@@ -3,11 +3,9 @@ import boto3
 from botocore.exceptions import ClientError
 
 class s3_client():
-    username = None
     s3_client = None
 
-    def __init__(self, username):
-        self.username = username
+    def __init__(self):
         self.s3_client = boto3.client('s3')
 
     def list_buckets(self):
@@ -41,9 +39,7 @@ class s3_client():
 
         # Upload the file
         try:
-            response = self.s3_client.upload_file(file_name, bucket, 
-                                                  self.username + '/'
-                                                  + object_name)
+            response = self.s3_client.upload_file(file_name, bucket, object_name)
         except ClientError as e:
             logging.error(e)
             return False
@@ -51,25 +47,21 @@ class s3_client():
     
     def get_user_files(self, bucket_name):
         result = self.s3_client.list_objects_v2(Bucket=bucket_name)
-
-        delim = self.username + '/'
+        print('-----------')
+        print(result)
+        print('-----------')
         keys = []
         total_size = 0.0
-        for obj in result.get('Contents'):
-            cur_file = obj.get('Key')
-
-            if(cur_file.startswith(delim)):
+        if 'Contents' in result:
+            for obj in result.get('Contents'):
+                cur_file = obj.get('Key')                
                 keys.append(cur_file)
-                total_size += float(obj.get('Size'))
-
-        totalsize = total_size/1000000.0
-        return(keys, total_size)
+        return keys
 
     def delete_from_s3(self, bucketname, filename):
         # Upload the file
         mybucket = self.s3_client.get_bucket(bucketname)
-        mybucket.delete_key(self.username + '/' + filename)
+        mybucket.delete_key(filename)
 
     def download_from_s3(self, bucketname, filename, object_name):
-        self.s3_client.download_file(bucketname, self.username + 
-                                     '/' + object_name, filename)
+        self.s3_client.download_file(bucketname, object_name, filename)

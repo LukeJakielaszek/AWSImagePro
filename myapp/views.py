@@ -41,15 +41,12 @@ def applyfilter(filename, preset):
 
         bucket_name = 'project-1-imagepro'
 
-        client = s3_client('luke')
-        client.list_buckets()
+        client = s3_client()
 
         client.upload_file(inputfile, bucket_name, filename)
         client.upload_file(outputfile, bucket_name, outputfilename)
 
-        print(client.get_user_files(bucket_name))
-
-        client.download_from_s3(bucket_name, './download/'+outputfilename, outputfilename)
+        #client.download_from_s3(bucket_name, './download/'+outputfilename, outputfilename)
 
 	return outputfilename
 
@@ -59,23 +56,46 @@ def handle_uploaded_file(f,preset):
 		for chunk in f.chunks():
 			destination.write(chunk)
 
-	outputfilename=applyfilter(f.name, preset)
+        outputfilename = applyfilter(f.name, preset)
 	return outputfilename
 
 def home(request):
+        context = {}
 	if request.method == 'POST':
 		form = UploadFileForm(request.POST, request.FILES)
 		if form.is_valid():
                         preset=request.POST['preset']
 			outputfilename = handle_uploaded_file(request.FILES['myfilefield'],
                                                               preset)
+                        context['outputfilename'] = outputfilename
 			return render_to_response('process.html',
-                                                  {'outputfilename': outputfilename}, 
+                                                  context, 
                                                   context_instance=RequestContext(request))
 	else:
 		form = UploadFileForm() 
+                print('No Posting Done')
 
-        return render_to_response('index.html',{'form': form}, 
+        context['form'] = form
+
+        # list all files in s3
+        client = s3_client()
+        bucket_name = 'project-1-imagepro'        
+        download_list = client.get_user_files(bucket_name)
+        print('-----------')
+        print(download_list)
+        print('-----------')
+
+        if(len(download_list) > 0):
+                temp = []
+                for item in download_list:
+                        temp.append(item.encode('ascii'))
+                download_list = temp
+                context['download_list'] = download_list
+                print('Displaying download list')
+                for item in download_list:
+                        print(item)
+                        client.download_from_s3(bucket_name, '/home/ec2-user/AWSImagePro/myapp/templates/static/downloads/' + item, item)
+        return render_to_response('home.html', context, 
                                   context_instance=RequestContext(request))
 
 def process(request):
