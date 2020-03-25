@@ -46,8 +46,6 @@ def applyfilter(filename, preset):
         client.upload_file(inputfile, bucket_name, filename)
         client.upload_file(outputfile, bucket_name, outputfilename)
 
-        #client.download_from_s3(bucket_name, './download/'+outputfilename, outputfilename)
-
 	return outputfilename
 
 def handle_uploaded_file(f,preset):
@@ -78,23 +76,34 @@ def home(request):
         context['form'] = form
 
         # list all files in s3
+        # connect to S3
         client = s3_client()
+
+        # get all files from S3
         bucket_name = 'project-1-imagepro'        
         download_list = client.get_user_files(bucket_name)
         print('-----------')
         print(download_list)
         print('-----------')
 
+        # if files exist on S3
         if(len(download_list) > 0):
+                # convert contents to ascii
                 temp = []
                 for item in download_list:
                         temp.append(item.encode('ascii'))
                 download_list = temp
+
+                # add files to html context
                 context['download_list'] = download_list
                 print('Displaying download list')
+                
+                # download s3 files to local EC2 instance
                 for item in download_list:
                         print(item)
                         client.download_from_s3(bucket_name, '/home/ec2-user/AWSImagePro/myapp/templates/static/downloads/' + item, item)
+                        
+        # render home page
         return render_to_response('home.html', context, 
                                   context_instance=RequestContext(request))
 
